@@ -1,8 +1,19 @@
 import { type } from "os";
+import { useSetRecoilState } from '../../../node_modules/recoil';
+import { authModalState } from "../../atoms/authModelAtom";
 
 type LoginProps = {}
 
 const Login:React.FC<LoginProps> = () => {
+    
+    const setAuthModalState = useSetRecoilState(authModalState);
+    const handleForgotPwdClick = () => {
+        setAuthModalState(prev => ({...prev, isOpen: true, type: "forgotPassword"}));
+    };
+    const handleRegisterClick = () => {
+        setAuthModalState(prev => ({...prev, isOpen: true, type: "register"}));
+    };
+    
     return <form action="" className="space-y-6 px-6 pb-4">
         <h3 className='text-xl font-medium text-white'>Sign in to Alex code</h3>
         <div>
@@ -17,14 +28,14 @@ const Login:React.FC<LoginProps> = () => {
         </div>
         <button type="submit" className="w-full text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
         bg-brand-orange hover:bg-brand-orange-s">Login</button>
-        <button className="flex w-full justify-end">
+        <button className="flex w-full justify-end" onClick={handleForgotPwdClick}>
             <a href="#" className="text-sm block text-brand-orange hover:underline w-full text-right">
                 Forgot Password?
             </a>
         </button>
         <div className="text-sm font-medium text-gray-300">
             Not Registered?{" "}
-            <a href="#" className='text-blue-700 hover:underline'>
+            <a href="#" onClick={handleRegisterClick} className='text-blue-700 hover:underline'>
                 Create account
             </a>
         </div>

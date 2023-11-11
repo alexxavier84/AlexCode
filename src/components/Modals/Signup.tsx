@@ -1,8 +1,15 @@
 import { type } from "os";
+import { useSetRecoilState } from '../../../node_modules/recoil';
+import { authModalState } from '../../atoms/authModelAtom';
 
 type SignupProps = {}
 
 const Signup:React.FC<SignupProps> = () => {
+    const setAuthModalState = useSetRecoilState(authModalState);
+    const handleLoginClick = () => {
+        setAuthModalState(prev => ({...prev, isOpen: true, type: "login"}));
+    };
+
     return <form action="" className="space-y-6 px-6 pb-4">
     <h3 className='text-xl font-medium text-white'>Register to Alex code</h3>
     <div>
@@ -24,7 +31,7 @@ const Signup:React.FC<SignupProps> = () => {
     bg-brand-orange hover:bg-brand-orange-s">Register</button>
     <div className="text-sm font-medium text-gray-300">
         Already have an account?{" "}
-        <a href="#" className='text-blue-700 hover:underline'>
+        <a href="#" onClick={handleLoginClick} className='text-blue-700 hover:underline'>
             Log In
         </a>
     </div>

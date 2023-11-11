@@ -3,7 +3,7 @@ import { IoClose } from "../../../node_modules/react-icons/io5";
 import Login from "./Login";
 import Signup from "./Signup";
 import ResetPassword from "./ResetPassword";
-import { useRecoilValue } from '../../../node_modules/recoil';
+import { useRecoilValue, useSetRecoilState } from '../../../node_modules/recoil';
 import { authModalState } from "../../atoms/authModelAtom";
 
 type AuthModalProps = {
@@ -12,6 +12,10 @@ type AuthModalProps = {
 
 const AuthModal:React.FC<AuthModalProps> = () => {
     const authModal = useRecoilValue(authModalState);
+    const setAuthModalState = useSetRecoilState(authModalState);
+    const handleCloseClick = () => {
+        setAuthModalState(prev => ({...prev, isOpen: false}));
+    };
     return (
         <>
             <div className="absolute top-0 left-0 w-full flex items-center justify-center bg-black bg-opacity-60"></div>
@@ -20,7 +24,7 @@ const AuthModal:React.FC<AuthModalProps> = () => {
                     <div className="bg-white rounded-lg shadow relative w-full bg-gradient-to-b from-brand-orange to-slate-900 mx-6">
                         <div className="flex justify-end p-2">
                             <button type="button" className="bg-transparent rounded=lg text-sm p-1.5 ml-auto inline-flex items-center
-                            hover:bg-gray-800 hover:text-white text-white">
+                            hover:bg-gray-800 hover:text-white text-white" onClick={handleCloseClick}>
                                 <IoClose className="h-5 w-5"/>
                             </button>
                         </div>
