@@ -7,11 +7,9 @@ type LoginProps = {}
 const Login:React.FC<LoginProps> = () => {
     
     const setAuthModalState = useSetRecoilState(authModalState);
-    const handleForgotPwdClick = () => {
-        setAuthModalState(prev => ({...prev, isOpen: true, type: "forgotPassword"}));
-    };
-    const handleRegisterClick = () => {
-        setAuthModalState(prev => ({...prev, isOpen: true, type: "register"}));
+
+    const handleClick = (type: 'login' | 'register' | 'forgotPassword') => {
+        setAuthModalState(prev => ({...prev, isOpen: true, type: type}));
     };
     
     return <form action="" className="space-y-6 px-6 pb-4">
@@ -28,14 +26,14 @@ const Login:React.FC<LoginProps> = () => {
         </div>
         <button type="submit" className="w-full text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
         bg-brand-orange hover:bg-brand-orange-s">Login</button>
-        <button className="flex w-full justify-end" onClick={handleForgotPwdClick}>
+        <button className="flex w-full justify-end" onClick={() => handleClick("forgotPassword")}>
             <a href="#" className="text-sm block text-brand-orange hover:underline w-full text-right">
                 Forgot Password?
             </a>
         </button>
         <div className="text-sm font-medium text-gray-300">
             Not Registered?{" "}
-            <a href="#" onClick={handleRegisterClick} className='text-blue-700 hover:underline'>
+            <a href="#" onClick={() => handleClick("register")} className='text-blue-700 hover:underline'>
                 Create account
             </a>
         </div>
