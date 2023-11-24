@@ -5,6 +5,7 @@ import { useSignInWithEmailAndPassword } from '../../../node_modules/react-fireb
 import { auth } from "../../firebase/firebase";
 import { useState, useEffect } from "react";
 import { useRouter } from "../../../node_modules/next/navigation";
+import { toast } from "react-toastify";
 
 type LoginProps = {}
 
@@ -28,21 +29,21 @@ const Login:React.FC<LoginProps> = () => {
         setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
     };
 
-    const handleLogin = async (e:React.ChangeEvent<HTMLFontElement>) => {
+    const handleLogin = async (e:React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(!inputs.email || !inputs.password) return alert("Please fill all fields");
+        if(!inputs.email || !inputs.password) return toast.info("Please fill all fields", {position: "top-center", autoClose: 3000});
 
         try {
             const newUser = await signInWithEmailAndPassword(inputs.email, inputs.password);
             if(!newUser) return;
             router.push("/");
         } catch (error: any) {
-            alert(error.message);
+            toast.error(error.message, {position: "top-center", autoClose: 3000});
         }
     };
 
     useEffect(() => {
-        if(error) alert(error.message);
+        if(error) toast.error(error.message, {position: "top-center", autoClose: 3000});
     }, [error]);
 
     console.log(user, "user");
