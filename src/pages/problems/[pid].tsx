@@ -1,5 +1,6 @@
 // Import React and any other necessary libraries
 import Topbar from '@/components/Topbar/Topbar';
+import Workspace from '@/components/Workspace/Workspace';
 import React from 'react';
 
 // Define the prop types for your component (if needed)
@@ -16,6 +17,7 @@ const ProblemPage: React.FC<ProblemPageProps> = () => {
     <div>
       {/* JSX for your component */}
       <Topbar problemPage={true}/>
+      <Workspace />
     </div>
   );
 };
