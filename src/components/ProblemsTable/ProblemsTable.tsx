@@ -1,23 +1,31 @@
 import { type } from "os";
 import React, { useState, useEffect } from "react";
-import { problems } from "../../mockProblems/Problems";
 import { BsCheckCircle } from "../../../node_modules/react-icons/bs";
 import { AiFillYoutube } from "../../../node_modules/react-icons/ai";
 import { IoIosClose } from "../../../node_modules/react-icons/io";
 import YouTube from "../../../node_modules/react-youtube/dist/YouTube";
 import Link from "next/link";
+import { DBProblem, Problem } from "@/utils/types/problem";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { firestore } from "@/firebase/firebase";
 
 
 type ProblemsTableProps = {
-
+    setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ProblemsTable: React.FC<ProblemsTableProps> = () => {
+const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
     
     const [youtubePlayer, setYoutubePlayer] = useState({
         isOpen: false,
         videoId: ""
     });
+
+    const problems = useGetProblems(setLoadingProblems);
+
+    const openModel = (id: string) => {
+        setYoutubePlayer({isOpen: true, videoId: id});
+    }
 
     const closeModel = () => {
         setYoutubePlayer({isOpen: false, videoId: ""});
@@ -45,9 +53,17 @@ const ProblemsTable: React.FC<ProblemsTableProps> = () => {
                                     <BsCheckCircle fontSize={"18"} width="18"/>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <Link href={`/problems/${doc.id}`} className="hover:text-blue-600 cursor-pointer">
-                                        {doc.title}
-                                    </Link>
+                                    {doc.link ? (
+                                        <Link href={doc.link} className="hover:text-blue-600 cursor-pointer" target="_blank">
+                                            {doc.title}
+                                        </Link>
+                                    ):(
+                                        <Link href={`/problems/${doc.id}`} className="hover:text-blue-600 cursor-pointer">
+                                            {doc.title}
+                                        </Link>
+                                    )}
+                                    
+                                    
                                 </td>
                                 <td className={`px-6 py-4 ${difficultyColor}`}>
                                     {doc.difficulty}
@@ -91,3 +107,27 @@ const ProblemsTable: React.FC<ProblemsTableProps> = () => {
 };
 
 export default ProblemsTable;
+
+
+function useGetProblems(setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>) {
+    const [problems, setProblems] = useState<DBProblem[]>([]);
+    
+    useEffect(() => {
+        const getProblems = async () => {
+            setLoadingProblems(true);
+            const q = query(collection(firestore, "problems"), orderBy("order","asc"));
+            const querySnapshot = await getDocs(q);
+            const tempProblems: DBProblem[] = [];
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                tempProblems.push({id: doc.id, ...doc.data()} as DBProblem);
+            });
+            setProblems(tempProblems);
+            setLoadingProblems(false);
+        };
+        getProblems();
+
+    }, [setLoadingProblems]);
+    return problems;
+}
+
